@@ -16,10 +16,10 @@ public class Lab_3 {
 
             // Display menu and get user's choice
             System.out.println("\nMenu:");
-            System.out.println("1. Find the Mean Value");
-            System.out.println("2. Find the Median Value");
-            System.out.println("3. Find the Mode Value");
-            System.out.print("Enter your choice: ");
+            System.out.println("To find the Mean Value(1)");
+            System.out.println("To find the Median Value(2)");
+            System.out.println("To find the Mode Value(3)");
+            System.out.print("Enter your choice of (1/2/3): ");
             int choice = scanner.nextInt();
 
             // Compute and display the result based on the user's choice
