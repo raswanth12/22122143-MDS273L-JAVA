@@ -95,4 +95,7 @@ public class Lab_5 {
                     if (!found) {
                         System.out.println("Student not found.");
                     }
-                }}}}
+                }
+            }
+        }
+    }
