@@ -1,6 +1,7 @@
 import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 
 class Student {
     String regNo;
@@ -55,8 +56,10 @@ public class Lab_5 {
             System.out.println("Menu:");
             System.out.println("1. Add a student");
             System.out.println("2. Search for a student");
-            System.out.println("3. Display all students");
-            System.out.println("4. Exit");
+            System.out.println("3. Edit a student's details");
+            System.out.println("4. Delete a student's record");
+            System.out.println("5. Display all students");
+            System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // consume the newline character
@@ -86,16 +89,104 @@ public class Lab_5 {
                     boolean found = false;
                     for (int i = 0; i < numOfStudents; i++) {
                         Student s = students[i];
-                        if (s.name.equals(searchKey) || s.regNo.equals(searchKey)) {
-                            s.printDetails();
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        System.out.println("Student not found.");
+                                         if (s.regNo.equals(searchKey) || s.name.equals(searchKey)) {
+                        s.printDetails();
+                        found = true;
+                        break;
                     }
                 }
-            }
+                if (!found) {
+                    System.out.println("Student not found.");
+                }
+                break;
+            case 3:
+                System.out.print("Enter the name or registration number of the student to edit: ");
+                String editKey = scanner.nextLine();
+                found = false;
+                for (int i = 0; i < numOfStudents; i++) {
+                    Student s = students[i];
+                    if (s.regNo.equals(editKey) || s.name.equals(editKey)) {
+                        System.out.print("Enter the student's new registration number (leave blank to keep the same): ");
+                        String newRegNo = scanner.nextLine();
+                        System.out.print("Enter the student's new name (leave blank to keep the same): ");
+                        String newName = scanner.nextLine();
+                        System.out.print("Enter the student's new email (leave blank to keep the same): ");
+                        String newEmail = scanner.nextLine();
+                        System.out.print("Enter the student's new phone number (leave blank to keep the same): ");
+                        String newPhone = scanner.nextLine();
+                        System.out.print("Enter the student's new class (leave blank to keep the same): ");
+                        String newClass = scanner.nextLine();
+                        System.out.print("Enter the student's new department (leave blank to keep the same): ");
+                        String newDepartment = scanner.nextLine();
+                        if (!newRegNo.isEmpty()) {
+                            s.regNo = newRegNo;
+                        }
+                        if (!newName.isEmpty()) {
+                            s.name = newName;
+                        }
+                        if (!newEmail.isEmpty()) {
+                            s.email = newEmail;
+                        }
+                        if (!newPhone.isEmpty()) {
+                            s.phone = newPhone;
+                        }
+                        if (!newClass.isEmpty()) {
+                            s.class_ = newClass;
+                        }
+                        if (!newDepartment.isEmpty()) {
+                            s.department = newDepartment;
+                        }
+                        s.saveToFile();
+                        System.out.println("Student details updated successfully.");
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.out.println("Student not found.");
+                }
+                break;
+            case 4:
+                System.out.print("Enter the name or registration number of the student to delete: ");
+                String deleteKey = scanner.nextLine();
+                found = false;
+                for (int i = 0; i < numOfStudents; i++) {
+                    Student s = students[i];
+                    if (s.regNo.equals(deleteKey) || s.name.equals(deleteKey)) {
+                        File file = new File(s.name + ".txt");
+                        file.delete();
+                        for (int j = i; j < numOfStudents - 1; j++) {
+                            students[j] = students[j + 1];
+                        }
+                        numOfStudents--;
+                        System.out.println("Student deleted successfully.");
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.out.println("Student not found.");
+                }
+                break;
+            case 5:
+                if (numOfStudents == 0) {
+                    System.out.println("No students added yet.");
+                } else {
+                    for (int i = 0; i < numOfStudents; i++) {
+                        Student s = students[i];
+                        s.printDetails();
+                        System.out.println();
+                    }
+                }
+                break;
+            case 6:
+                System.out.println("Exiting program.");
+                scanner.close();
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+                break;
         }
     }
+}}
