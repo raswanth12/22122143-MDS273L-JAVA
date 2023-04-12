@@ -1,14 +1,27 @@
+import com.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
 public class pointsummary {
+    private static int record;
+
+    /**
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         String filePath = "C:\\Users\\HP\\Downloads\\Iris.csv";
+        printOverallSummaryStatistics(filePath);
+        printSummaryStatisticsBySpecies(filePath);
+    }
 
-        // Create CSVReader object
-     CSVReader reader = new CSVReader(new FileReader(filePath));
+        private static void printOverallSummaryStatistics(String filePath) {
+    }
+
+        private static void printSummaryStatisticsBySpecies(String filePath) {
+    }
 
         // Initialize variables for summary statistics
         double sepalLengthMean = 0.0;
@@ -81,7 +94,7 @@ public class pointsummary {
         return 0;
     }
 
-    private static double mode(List<Double> sepalWidthValues, String[] record) {
+    private static double mode(List<Double> sepalWidthValues) {
         return 0;
 
         // Calculate summary statistics for each species
