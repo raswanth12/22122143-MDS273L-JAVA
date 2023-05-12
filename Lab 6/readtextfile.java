@@ -6,13 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+public class readtextfile {
 
-    public class readtextfile {
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
 
-            public static void main(String[] args) {
-            
         String fileName = "text.txt";
-        String line = null;
         HashMap<Character, Integer> vowels = new HashMap<>();
         HashMap<Character, Integer> digits = new HashMap<>();
 
@@ -36,18 +37,19 @@ import java.util.Map;
         try {
             FileReader fileReader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
 
             while((line = bufferedReader.readLine()) != null) {
                 for(int i = 0; i < line.length(); i++) {
-                char c = line.charAt(i);
-                if(Character.isDigit(c)) {
-                    digits.put(c, digits.get(c) + 1);
-                } else if(Character.isAlphabetic(c)) {
-                    c = Character.toLowerCase(c);
-                    if(vowels.containsKey(c)) {
-                        vowels.put(c, vowels.get(c) + 1);
+                    char c = line.charAt(i);
+                    if(Character.isDigit(c)) {
+                        digits.put(c, digits.get(c) + 1);
+                    } else if(Character.isAlphabetic(c)) {
+                        c = Character.toLowerCase(c);
+                        if(vowels.containsKey(c)) {
+                            vowels.put(c, vowels.get(c) + 1);
+                        }
                     }
-                }
                 }
             }
 
@@ -59,20 +61,17 @@ import java.util.Map;
         System.out.println("Vowels and their count:");
         System.out.println(vowels);
         System.out.println("Digits and their count:");
-        System.out.println(digits);}
-      // Change the file path to the location of your text file
+        System.out.println(digits);
+
+        // Change the file path to the location of your text file
         String filePath = "text.txt";
 
         Map<String, Integer> wordCounts = new HashMap<>();
-        Map<Character, Integer> charCounts = new HashMap<>();{
-
-        
+        Map<Character, Integer> charCounts = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
-        }BufferedReader br;
-        String line;
-        while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 String[] words = line.split("\\s+");
                 for (String word : words) {
                     wordCounts.merge(word, 1, Integer::sum);
@@ -81,6 +80,8 @@ import java.util.Map;
                     }
                 }
             }
+        } catch (IOException ex) {
+            System.out.println("Error reading file '" + filePath + "'");
         }
 
         List<Map.Entry<String, Integer>> wordList = new ArrayList<>(wordCounts.entrySet());
@@ -106,8 +107,4 @@ import java.util.Map;
             System.out.println(charList.get(i).getKey() + ": " + charList.get(i).getValue());
         }
     }
-
-
-    
-
-    
+}

@@ -1,11 +1,11 @@
 import com.opencsv.CSVReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class pointsummary {
-    private static int record;
 
     /**
      * @param args
@@ -17,17 +17,16 @@ public class pointsummary {
         printSummaryStatisticsBySpecies(filePath);
     }
 
-        private static void printOverallSummaryStatistics(String filePath) {
-    }
-
-        private static void printSummaryStatisticsBySpecies(String filePath) {
-    }
+    private static void printOverallSummaryStatistics(String filePath) throws IOException {
+        CSVReader reader = new CSVReader();
+        String[] nextLine;
+        reader.readNext(); // skip the header
 
         // Initialize variables for summary statistics
-        double sepalLengthMean = 0.0;
-        double sepalWidthMean = 0.0;
-        double petalLengthMean = 0.0;
-        double petalWidthMean = 0.0;
+        double sepalLengthSum = 0.0;
+        double sepalWidthSum = 0.0;
+        double petalLengthSum = 0.0;
+        double petalWidthSum = 0.0;
 
         List<Double> sepalLengthValues = new ArrayList<>();
         List<Double> sepalWidthValues = new ArrayList<>();
@@ -35,19 +34,18 @@ public class pointsummary {
         List<Double> petalWidthValues = new ArrayList<>();
 
         // Loop through CSV records
-        String[] record;
-        while ((record = reader.readNext()) != null) {
+        while ((nextLine = reader.readNext()) != null) {
             // Get attribute values
-            double sepalLength = Double.parseDouble(record[0]);
-            double sepalWidth = Double.parseDouble(record[1]);
-            double petalLength = Double.parseDouble(record[2]);
-            double petalWidth = Double.parseDouble(record[3]);
+            double sepalLength = Double.parseDouble(nextLine[0]);
+            double sepalWidth = Double.parseDouble(nextLine[1]);
+            double petalLength = Double.parseDouble(nextLine[2]);
+            double petalWidth = Double.parseDouble(nextLine[3]);
 
-            // Calculate means
-            sepalLengthMean += sepalLength;
-            sepalWidthMean += sepalWidth;
-            petalLengthMean += petalLength;
-            petalWidthMean += petalWidth;
+            // Calculate sums
+            sepalLengthSum += sepalLength;
+            sepalWidthSum += sepalWidth;
+            petalLengthSum += petalLength;
+            petalWidthSum += petalWidth;
 
             // Add attribute values to lists
             sepalLengthValues.add(sepalLength);
@@ -55,60 +53,29 @@ public class pointsummary {
             petalLengthValues.add(petalLength);
             petalWidthValues.add(petalWidth);
         }
+        reader.clone();
 
-        // Calculate means
-        int numRecords = sepalLengthValues.size();
-        sepalLengthMean /= numRecords;
-        sepalWidthMean /= numRecords;
-        petalLengthMean /= numRecords;
-        petalWidthMean /= numRecords;
-
-        // Calculate medians
-        double sepalLengthMedian = median(sepalLengthValues);
-        double sepalWidthMedian = median(sepalWidthValues);
-        double petalLengthMedian = median(petalLengthValues);
-        double petalWidthMedian = median(petalWidthValues);
-
-        // Calculate modes
-        double sepalLengthMode = mode(sepalLengthValues);
-        double sepalWidthMode = mode(sepalWidthValues);
-        double petalLengthMode = mode(petalLengthValues);
-        double petalWidthMode = mode(petalWidthValues);
-        // TO calculate Min, Max
-        double sepalLengthMin = Collections.min(sepalLengthValues);
-        double sepalLengthMax = Collections.max(sepalLengthValues);
-        double sepalWidthMin = Collections.min(sepalWidthValues);
-        double sepalWidthMax = Collections.max(sepalWidthValues);
-        double petalLengthMin = Collections.min(petalLengthValues);
-        double petalLengthMax = Collections.max(petalLengthValues);
-        double petalWidthMin = Collections.min(petalWidthValues);
-        double petalWidthMax = Collections.max(petalWidthValues);
-
-        
-   
-   
-   
-    
-
-    private static double median(List<Double> sepalLengthValues) {
-        return 0;
+        // Other statistical calculations go here...
     }
 
-    private static double mode(List<Double> sepalWidthValues) {
-        return 0;
+    /**
+     * @param filePath
+     * @throws IOException
+     */
+    private static void printSummaryStatisticsBySpecies(String filePath) throws IOException {
+        CSVReader reader = new CSVReader();
+        String[] nextLine;
+        reader.readNext(); // skip the header
 
         // Calculate summary statistics for each species
         Map<String, List<Double>> speciesMap = new HashMap<>();
-        String filePath;
-        InputStreamReader reader = new InputStreamReader(new FileReader(filePath));
-        reader.read(); // Skip header row
-        while ((record = reader.read()) != null) {
+        while ((nextLine = reader.readNext()) != null) {
             // Get species and attribute values
-            String species = record[4];
-            double sepalLength = Double.parseDouble(record[0]);
-            double sepalWidth = Double.parseDouble(record[1]);
-            double petalLength = Double.parseDouble(record[2]);
-            double petalWidth = Double.parseDouble(record[3]);
+            String species = nextLine[4];
+            double sepalLength = Double.parseDouble(nextLine[0]);
+            double sepalWidth = Double.parseDouble(nextLine[1]);
+            double petalLength = Double.parseDouble(nextLine[2]);
+            double petalWidth = Double.parseDouble(nextLine[3]);
 
             // Add attribute values to species map
             if (!speciesMap.containsKey(species)) {
@@ -119,20 +86,36 @@ public class pointsummary {
             speciesMap.get(species).add(petalLength);
             speciesMap.get(species).add(petalWidth);
         }
+        reader.clone();
 
         // Print summary statistics for each species
         System.out.println("\nSummary Statistics by Species:");
         for (String species : speciesMap.keySet()) {
             List<Double> values = speciesMap.get(species);
+
+            // Calculate mean
             double mean = values.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-            double median = median(values);
-            double mode = mode(values, record);
+
+            // Calculate median
+            Collections.sort(values);
+            double median;
+            int size = values.size();
+            if (size % 2 == 0)
+                median = (values.get(size / 2) + values.get(size / 2 - 1)) / 2;
+            else
+                median = values.get(size / 2);
+
+            // Calculate mode
+            Map<Double, Long> freqMap = values.stream()
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+            double mode = Collections.max(freqMap.entrySet(), Comparator.comparingLong(Map.Entry::getValue)).getKey();
+
+            // Calculate min, max
             double min = Collections.min(values);
             double max = Collections.max(values);
+
             System.out.println(species + ": Mean = " + mean + ", Median = " + median +
                     ", Mode = " + mode + ", Min = " + min + ", Max = " + max);
         }
-
-        reader.close();
-
-    }}
+    }
+}
